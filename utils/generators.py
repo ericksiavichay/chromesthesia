@@ -79,7 +79,8 @@ def generate_video(
     # if there are images from a previous run, delete them
     if os.path.exists(output_path + "images/"):
         for filename in os.listdir(output_path + "images/"):
-            os.remove(output_path + "images/" + filename)
+            if filename.endswith((".png", ".mp4")):
+                os.remove(output_path + "images/" + filename)
 
     # generate frames
     current_image = init_image
