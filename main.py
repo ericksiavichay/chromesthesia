@@ -14,7 +14,7 @@ if __name__ == "__main__":
     prompt = "A painting of a sunset"
     negative_prompt = None
 
-    model = ChromasthesiaDiffuser(model_id=model_id)
+    model = ChromasthesiaDiffuser(model=model)
 
     generate_video(
         youtube_url="https://www.youtube.com/watch?v=9ZrAYxWPN6c",
