@@ -85,6 +85,8 @@ def generate_video(
                 strength=strength,
                 guidance_scale=scale,
             ).images[0]
+            if not os.path.exists(os.path.dirname(output_path + "images/")):
+                os.makedirs(os.path.dirname(output_path + "images/"))
             current_image.save(output_path + "images/" + f"image_{index}")
             index += 1
 

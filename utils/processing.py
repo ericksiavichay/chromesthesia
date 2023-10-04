@@ -25,11 +25,15 @@ def get_sorted_images(directory):
 
 def create_mp4_from_pngs(png_dir, mp4_path, fps=30):
     """
-    Create mp4 video from pngs in a directory.
+    Create mp4 video from pngs in a directory. Creates
+    directory if it doesn't exist.
     """
     images = []
     filenames = get_sorted_images(png_dir)
     for filename in filenames:
         file_path = os.path.join(png_dir, filename)
         images.append(imageio.imread(file_path))
+
+    if not os.path.exists(os.path.dirname(mp4_path)):
+        os.makedirs(os.path.dirname(mp4_path))
     imageio.mimsave(mp4_path, images, fps=fps)
