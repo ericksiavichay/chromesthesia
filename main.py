@@ -11,6 +11,8 @@ if __name__ == "__main__":
     num_frames = 30
     strength = 0.5
     scale = 7.5
+    prompt = "A painting of a sunset"
+    negative_prompt = None
 
     model = ChromasthesiaDiffuser(model_id=model_id)
 
@@ -18,6 +20,8 @@ if __name__ == "__main__":
         youtube_url="https://www.youtube.com/watch?v=9ZrAYxWPN6c",
         output_path="./video_export/",
         model=model,
+        prompt=prompt,
+        negative_prompt=negative_prompt,
         num_frames=num_frames,
         strength=strength,
         guidance_scale=scale,
