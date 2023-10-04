@@ -29,6 +29,8 @@ class ChromasthesiaDiffuser(Pipeline):
         postprocess_kwargs = {}
         if "image" in kwargs:
             _forward_kwargs["image"] = kwargs["image"]
+        elif "model_id" in kwargs:
+            preprocess_kwargs["model_id"] = kwargs["model_id"]
         return preprocess_kwargs, _forward_kwargs, postprocess_kwargs
 
     def preprocess(self, inputs):
@@ -69,7 +71,7 @@ def generate_video(
     youtube_url,
     model,
     prompt,
-    negative_prompt,
+    negative_prompt=None,
     output_path="~/video_export/",
     num_frames=300,
     fps=30,
