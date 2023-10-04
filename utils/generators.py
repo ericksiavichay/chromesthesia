@@ -70,7 +70,7 @@ def generate_video(
     init_image = model_text_to_img(prompt, negative_prompt=negative_prompt).images[0]
 
     model_img_to_img = StableDiffusionImg2ImgPipeline(
-        **model_text_to_img.components, safety_checker=None
+        **model_text_to_img.components
     ).to(device)
 
     if not os.path.exists(os.path.dirname(output_path + "images/")):
