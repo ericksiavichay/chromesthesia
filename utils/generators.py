@@ -3,7 +3,7 @@ Abstraction over diffuser for easy to use video generators
 """
 from tqdm import tqdm
 import torch
-from diffusers import StableDiffusionPipeline, AutoPipelineForImg2Img
+from diffusers import StableDiffusionPipeline, StableDiffusionImg2ImgPipeline
 import os
 import processing
 
@@ -69,7 +69,9 @@ def generate_video(
     prompt = f"{song_lyrics[0]}, {style_prompt}, {negative_prompt}"
     init_image = model_text_to_img(prompt, negative_prompt).images[0]
 
-    model_img_to_img = AutoPipelineForImg2Img.from_pipe(model_text_to_img).to(device)
+    model_img_to_img = StableDiffusionImg2ImgPipeline.from_pipe(model_text_to_img).to(
+        device
+    )
 
     # generate frames
     current_image = init_image
