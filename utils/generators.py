@@ -29,11 +29,11 @@ def generate_video(
 
     if model_id.endswith(".safetensors"):
         model_text_to_img = StableDiffusionPipeline.from_single_file(
-            model_id, torch_dtype=torch.float16
+            model_id, torch_dtype=torch.float16, safety_checker=None
         )
     else:
         model_text_to_img = StableDiffusionPipeline.from_pretrained(
-            model_id, torch_dtype=torch.float16
+            model_id, torch_dtype=torch.float16, safety_checker=None
         )
 
     model_text_to_img.to(device)  # Move model to GPU
@@ -70,7 +70,7 @@ def generate_video(
     init_image = model_text_to_img(prompt, negative_prompt=negative_prompt).images[0]
 
     model_img_to_img = StableDiffusionImg2ImgPipeline(
-        **model_text_to_img.components
+        **model_text_to_img.components, safety_checker=None
     ).to(device)
 
     if not os.path.exists(os.path.dirname(output_path + "images/")):
