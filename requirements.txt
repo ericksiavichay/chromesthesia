@@ -1,7 +1,7 @@
 diffusers
-safetensors
-transformers
-ftfy
 accelerate
+transformers
+safetensors
+ftfy
 imageio
 imageio-ffmpeg
