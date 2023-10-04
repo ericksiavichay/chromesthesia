@@ -12,7 +12,7 @@ if __name__ == "__main__":
     strength = 0.5
     scale = 7.5
 
-    model = ChromasthesiaDiffuser(model_id)
+    model = ChromasthesiaDiffuser(model_id=model_id)
 
     generate_video(
         youtube_url="https://www.youtube.com/watch?v=9ZrAYxWPN6c",
