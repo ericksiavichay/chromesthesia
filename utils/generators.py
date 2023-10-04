@@ -5,7 +5,7 @@ from tqdm import tqdm
 import torch
 from diffusers import StableDiffusionPipeline, StableDiffusionImg2ImgPipeline
 import os
-import processing
+from . import processing
 
 os.environ["SAFETENSORS_FAST_GPU"] = 1
 
