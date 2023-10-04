@@ -66,8 +66,8 @@ def generate_video(
     )
     negative_prompt = "canvas frame, cartoon, 3d, ((disfigured)), ((bad art)), ((deformed)),((extra limbs)),((close up)),((b&w)), wierd colors, blurry, (((duplicate))), ((morbid)), ((mutilated)), [out of frame], extra fingers, mutated hands, ((poorly drawn hands)), ((poorly drawn face)), (((mutation))), (((deformed))), ((ugly)), blurry, ((bad anatomy)), (((bad proportions))), ((extra limbs)), cloned face, (((disfigured))), out of frame, ugly, extra limbs, (bad anatomy), gross proportions, (malformed limbs), ((missing arms)), ((missing legs)), (((extra arms))), (((extra legs))), mutated hands, (fused fingers), (too many fingers), (((long neck))), Photoshop, video game, ugly, tiling, poorly drawn hands, poorly drawn feet, poorly drawn face, out of frame, mutation, mutated, extra limbs, extra legs, extra arms, disfigured, deformed, cross-eye, body out of frame, blurry, bad art, bad anatomy, 3d render"
 
-    prompt = song_lyrics[0] + f", {style_prompt}, {negative_prompt}"
-    init_image = model_text_to_img(prompt, negative_prompt).images[0]
+    prompt = song_lyrics[0] + f", {style_prompt}"
+    init_image = model_text_to_img(prompt, negative_prompt=negative_prompt).images[0]
 
     model_img_to_img = StableDiffusionImg2ImgPipeline.from_pipe(model_text_to_img).to(
         device
@@ -78,11 +78,11 @@ def generate_video(
     index = 0
     semantic_size = num_frames // len(song_lyrics)
     for lyric in song_lyrics:
-        prompt = f"{lyric}, {style_prompt}, {negative_prompt}"
+        prompt = f"{lyric}, {style_prompt}"
         for _ in tqdm(range(semantic_size)):
             current_image = model_img_to_img(
                 prompt,
-                negative_prompt,
+                negative_prompt=negative_prompt,
                 image=current_image,
                 strength=strength,
                 guidance_scale=scale,
