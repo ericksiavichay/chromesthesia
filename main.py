@@ -14,6 +14,7 @@ if __name__ == "__main__":
 
     generate_video(
         youtube_url="https://www.youtube.com/watch?v=9ZrAYxWPN6c",
+        output_path="./video_export/",
         model_id=model_id,
         num_frames=num_frames,
         strength=strength,

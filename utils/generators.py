@@ -13,7 +13,7 @@ os.environ["SAFETENSORS_FAST_GPU"] = "1"
 def generate_video(
     youtube_url,
     model_id,
-    output_path="/video_export/",
+    output_path="~/video_export/",
     num_frames=300,
     fps=30,
     strength=0.5,
@@ -73,6 +73,9 @@ def generate_video(
         **model_text_to_img.components
     ).to(device)
 
+    if not os.path.exists(os.path.dirname(output_path + "images/")):
+        os.makedirs(os.path.dirname(output_path + "images/"))
+
     # generate frames
     current_image = init_image
     index = 0
@@ -87,8 +90,7 @@ def generate_video(
                 strength=strength,
                 guidance_scale=scale,
             ).images[0]
-            if not os.path.exists(os.path.dirname(output_path + "images/")):
-                os.makedirs(os.path.dirname(output_path + "images/"))
+
             current_image.save(output_path + "images/" + f"image_{index}.png")
             index += 1
 
