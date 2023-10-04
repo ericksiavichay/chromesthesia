@@ -29,13 +29,11 @@ class ChromasthesiaDiffuser(Pipeline):
         postprocess_kwargs = {}
         if "image" in kwargs:
             _forward_kwargs["image"] = kwargs["image"]
-        elif "model_id" in kwargs:
-            preprocess_kwargs["model_id"] = kwargs["model_id"]
         return preprocess_kwargs, _forward_kwargs, postprocess_kwargs
 
     def preprocess(self, inputs):
         # Diffuser will consist of the text to image and also an image to image pipeline
-        self._set_models(inputs["model_id"])
+        self._set_models(inputs["model"])
         model_input = Tensor(inputs["input_ids"])
         return {"model_input": model_input}
 
@@ -52,15 +50,15 @@ class ChromasthesiaDiffuser(Pipeline):
     def postprocess(self, model_outputs):
         pass
 
-    def _set_models(self, model_id="runwayml/stable-diffusion-v1-5"):
+    def _set_models(self, model="runwayml/stable-diffusion-v1-5"):
         """
         Function to create the custome diffuser pipeline. Create a new ID here
         and construct your own. The init model is just a text to image and the
         main model is just an image to image.
         """
-        if model_id == "runwayml/stable-diffusion-v1-5":
+        if model == "runwayml/stable-diffusion-v1-5":
             self.init_model = StableDiffusionPipeline.from_pretrained(
-                model_id, torch_dtype=torch.float16, safety_checker=None
+                model, torch_dtype=torch.float16, safety_checker=None
             )
             self.main_model = StableDiffusionImg2ImgPipeline.from_pretrained(
                 **self.init_model.components
