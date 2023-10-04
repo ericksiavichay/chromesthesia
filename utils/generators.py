@@ -69,9 +69,9 @@ def generate_video(
     prompt = song_lyrics[0] + f", {style_prompt}"
     init_image = model_text_to_img(prompt, negative_prompt=negative_prompt).images[0]
 
-    model_img_to_img = StableDiffusionImg2ImgPipeline.from_pipe(model_text_to_img).to(
-        device
-    )
+    model_img_to_img = StableDiffusionImg2ImgPipeline(
+        **model_text_to_img.components
+    ).to(device)
 
     # generate frames
     current_image = init_image
