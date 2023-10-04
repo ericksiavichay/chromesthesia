@@ -7,7 +7,7 @@ from diffusers import StableDiffusionPipeline, StableDiffusionImg2ImgPipeline
 import os
 from . import processing
 
-os.environ["SAFETENSORS_FAST_GPU"] = 1
+os.environ["SAFETENSORS_FAST_GPU"] = "1"
 
 
 def generate_video(
