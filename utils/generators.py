@@ -104,8 +104,7 @@ class ChromasthesiaDiffuser:
                 num_inference_steps=n_steps,
                 denoising_start=high_noise_frac,
                 image=base_image,
-                *args,
-                **kwargs,
+                prompt=kwargs["prompt"],
             ).images[0]
 
         return outputs
