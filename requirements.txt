@@ -3,5 +3,6 @@ accelerate
 transformers
 safetensors
 ftfy
+omegaconf
 imageio
 imageio-ffmpeg

@@ -9,11 +9,11 @@ from utils.generators import generate_video, ChromasthesiaDiffuser
 if __name__ == "__main__":
     # model_id = "runwayml/stable-diffusion-v1-5"
     model_id = "stabilityai/stable-diffusion-xl-base-1.0-with-refiner"
-    num_frames = 4320
+    num_frames = 60
     strength = 0.5
-    scale = 7.5
+    scale = 6
     fps = 24
-    prompt = "trippy vibrant psychedelic, lost cartoon anime girl from spirited away wandering through neon electric forest, HD 4K, bokeh, surreal and realism"
+    prompt = "trippy vibrant psychedelic, neon electric forest, HD 4K, bokeh, surreal and realism, "
     negative_prompt = "blurry"
 
     model = ChromasthesiaDiffuser(model_id=model_id)
