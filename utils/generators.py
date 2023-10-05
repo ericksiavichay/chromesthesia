@@ -24,29 +24,87 @@ else:
 
 class ChromasthesiaDiffuser:
     def __init__(self, model_id="runwayml/stable-diffusion-v1-5") -> None:
+        self.models = []
+        self.model_id = model_id
         if model_id == "runwayml/stable-diffusion-v1-5":
-            self.init_model = StableDiffusionPipeline.from_pretrained(
-                model_id, torch_dtype=torch.float16, safety_checker=None
+            self.models.append(
+                StableDiffusionPipeline.from_pretrained(
+                    model_id,
+                    torch_dtype=torch.float16,
+                    safety_checker=None,
+                    use_safetensors=True,
+                )
             )
-            self.main_model = StableDiffusionImg2ImgPipeline(
-                **self.init_model.components
+            self.models.append(
+                StableDiffusionImg2ImgPipeline(**self.models[0].components)
             )
-        elif model_id == "stabilityai/stable-diffusion-xl-refiner-1.0":
-            self.init_model = StableDiffusionXLPipeline.from_pretrained(
-                model_id, torch_dtype=torch.float16, safety_checker=None
+        elif model_id == "stabilityai/stable-diffusion-xl-base-1.0-with-refiner":
+            base = StableDiffusionXLPipeline.from_pretrained(
+                "stabilityai/stable-diffusion-xl-base-1.0",
+                torch_dtype=torch.float16,
+                safety_checker=None,
+                variant="fp16",
+                use_safetensors=True,
             )
-            self.main_model = StableDiffusionXLImg2ImgPipeline(
-                **self.init_model.components
+            self.models.append(base)
+            self.models.append(
+                StableDiffusionPipeline.from_pretrained(
+                    "stabilityai/stable-diffusion-xl-refiner-1.0",
+                    text_encoder_2=base.text_encoder_2,
+                    vae=base.vae,
+                    torch_dtype=torch.float16,
+                    use_safetensors=True,
+                    variant="fp16",
+                )
             )
+            self.models.append(
+                StableDiffusionImg2ImgPipeline(**self.models[0].components)
+            )
+        else:
+            raise NotImplementedError
 
     def __call__(self, *args, **kwargs):
-        if "image" in kwargs:
-            self.main_model.to(device)
-            outputs = self.main_model(*args, **kwargs).images[0]
+        if self.model_id == "runwayml/stable-diffusion-v1-5":
+            if "image" in kwargs:
+                self.models[1].to(device)
+                outputs = self.models[1](*args, **kwargs).images[0]
 
-        else:
-            self.init_model.to(device)
-            outputs = self.init_model(*args, **kwargs).images[0]
+            else:
+                self.models[0].to(device)
+                outputs = self.models[0](*args, **kwargs).images[0]
+        elif self.model_id == "stabilityai/stable-diffusion-xl-base-1.0-with-refiner":
+            n_steps = 40
+            high_noise_frac = 0.8
+
+            if "image" in kwargs:
+                self.models[2].to(device)
+                base_image = self.models[2](
+                    n_steps=n_steps,
+                    high_noise_frac=high_noise_frac,
+                    output_type="latent",
+                    *args,
+                    **kwargs,
+                ).images
+
+            else:
+                self.models[0].to(device)
+                base_image = self.models[0](
+                    num_inference_steps=n_steps,
+                    denoising_start=high_noise_frac,
+                    output_type="latent",
+                    *args,
+                    **kwargs,
+                ).images
+
+            self.models[1].to(device)
+            outputs = self.models[1](
+                num_inference_steps=n_steps,
+                denoising_start=high_noise_frac,
+                image=base_image,
+                *args,
+                **kwargs,
+            ).images[0]
+
         return outputs
 
 
