@@ -7,12 +7,14 @@ Original hackers include Yuxi Liu, Ethan Goldfarb, Shawn Dimantha, and Erick Sia
 from utils.generators import generate_video, ChromasthesiaDiffuser
 
 if __name__ == "__main__":
-    model_id = "runwayml/stable-diffusion-v1-5"
-    num_frames = 30
+    # model_id = "runwayml/stable-diffusion-v1-5"
+    model_id = "stabilityai/stable-diffusion-xl-base-1.0-with-refiner"
+    num_frames = 4320
     strength = 0.5
     scale = 7.5
-    prompt = "A painting of a sunset"
-    negative_prompt = None
+    fps = 24
+    prompt = "trippy vibrant psychedelic, lost cartoon anime girl from spirited away wandering through neon electric forest, HD 4K, bokeh, surreal and realism"
+    negative_prompt = "blurry"
 
     model = ChromasthesiaDiffuser(model_id=model_id)
 
@@ -25,4 +27,5 @@ if __name__ == "__main__":
         num_frames=num_frames,
         strength=strength,
         guidance_scale=scale,
+        fps=fps,
     )
