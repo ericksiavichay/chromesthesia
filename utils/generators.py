@@ -22,47 +22,25 @@ else:
     device = torch.device("cpu")
 
 
-class ChromasthesiaDiffuser(Pipeline):
-    def _sanitize_parameters(self, **kwargs):
-        preprocess_kwargs = {}
-        _forward_kwargs = {}
-        postprocess_kwargs = {}
-        if "image" in kwargs:
-            _forward_kwargs["image"] = kwargs["image"]
-        return preprocess_kwargs, _forward_kwargs, postprocess_kwargs
-
-    def preprocess(self, inputs):
-        # Diffuser will consist of the text to image and also an image to image pipeline
-        self._set_models(inputs["model"])
-        model_input = Tensor(inputs["input_ids"])
-        return {"model_input": model_input}
-
-    def _forward(self, model_inputs):
-        if model_inputs["image"] is not None:
-            self.main_model.to(device)
-            outputs = self.main_model(**model_inputs).images[0]
-
-        else:
-            self.init_model.to(device)
-            outputs = self.init_model(**model_inputs).images[0]
-        return outputs
-
-    def postprocess(self, model_outputs):
-        pass
-
-    def _set_models(self, model="runwayml/stable-diffusion-v1-5"):
-        """
-        Function to create the custome diffuser pipeline. Create a new ID here
-        and construct your own. The init model is just a text to image and the
-        main model is just an image to image.
-        """
-        if model == "runwayml/stable-diffusion-v1-5":
+class ChromasthesiaDiffuser:
+    def __init__(self, model_id="runwayml/stable-diffusion-v1-5") -> None:
+        if model_id == "runwayml/stable-diffusion-v1-5":
             self.init_model = StableDiffusionPipeline.from_pretrained(
-                model, torch_dtype=torch.float16, safety_checker=None
+                model_id, torch_dtype=torch.float16, safety_checker=None
             )
             self.main_model = StableDiffusionImg2ImgPipeline.from_pretrained(
                 **self.init_model.components
             )
+
+    def __call__(self, *args, **kwargs):
+        if kwargs["image"] is not None:
+            self.main_model.to(device)
+            outputs = self.main_model(*args, **kwargs).images[0]
+
+        else:
+            self.init_model.to(device)
+            outputs = self.init_model(*args, **kwargs).images[0]
+        return outputs
 
 
 def generate_video(
