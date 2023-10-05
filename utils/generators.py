@@ -46,6 +46,8 @@ class ChromasthesiaDiffuser:
                 variant="fp16",
                 use_safetensors=True,
             )
+            base.unet = torch.compile(base.unet, mode="reduce-overhead", fullgraph=True)
+
             self.models.append(base)
             self.models.append(
                 StableDiffusionPipeline.from_pretrained(
