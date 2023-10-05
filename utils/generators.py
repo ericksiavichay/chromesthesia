@@ -10,6 +10,7 @@ from diffusers import (
     StableDiffusionXLImg2ImgPipeline,
     StableDiffusionPipeline,
     StableDiffusionImg2ImgPipeline,
+    DiffusionPipeline,
 )
 from transformers import Pipeline
 import os
@@ -50,13 +51,14 @@ class ChromasthesiaDiffuser:
 
             self.models.append(base)
             self.models.append(
-                StableDiffusionPipeline.from_pretrained(
+                StableDiffusionXLImg2ImgPipeline.from_single_file(
                     "stabilityai/stable-diffusion-xl-refiner-1.0",
                     text_encoder_2=base.text_encoder_2,
                     vae=base.vae,
                     torch_dtype=torch.float16,
                     use_safetensors=True,
                     variant="fp16",
+                    safety_checker=None,
                 )
             )
             self.models.append(
