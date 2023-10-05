@@ -28,7 +28,7 @@ class ChromasthesiaDiffuser:
             self.init_model = StableDiffusionPipeline.from_pretrained(
                 model_id, torch_dtype=torch.float16, safety_checker=None
             )
-            self.main_model = StableDiffusionImg2ImgPipeline.from_pretrained(
+            self.main_model = StableDiffusionImg2ImgPipeline(
                 **self.init_model.components
             )
 
