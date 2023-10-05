@@ -94,7 +94,6 @@ class ChromasthesiaDiffuser:
                 self.models[0].to(device)
                 base_image = self.models[0](
                     num_inference_steps=n_steps,
-                    denoising_start=high_noise_frac,
                     output_type="latent",
                     *args,
                     **kwargs,
