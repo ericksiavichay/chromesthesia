@@ -51,7 +51,7 @@ class ChromasthesiaDiffuser:
 
             self.models.append(base)
             self.models.append(
-                StableDiffusionXLImg2ImgPipeline.from_single_file(
+                StableDiffusionXLImg2ImgPipeline.from_pretrained(
                     "stabilityai/stable-diffusion-xl-refiner-1.0",
                     text_encoder_2=base.text_encoder_2,
                     vae=base.vae,
@@ -62,7 +62,7 @@ class ChromasthesiaDiffuser:
                 )
             )
             self.models.append(
-                StableDiffusionImg2ImgPipeline(**self.models[0].components)
+                StableDiffusionXLImg2ImgPipeline(**self.models[0].components)
             )
         else:
             raise NotImplementedError
@@ -84,7 +84,7 @@ class ChromasthesiaDiffuser:
                 self.models[2].to(device)
                 base_image = self.models[2](
                     n_steps=n_steps,
-                    high_noise_frac=high_noise_frac,
+                    denoising_end=high_noise_frac,
                     output_type="latent",
                     *args,
                     **kwargs,
