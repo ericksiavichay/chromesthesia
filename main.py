@@ -13,7 +13,7 @@ if __name__ == "__main__":
     strength = 0.5
     scale = 6
     fps = 24
-    prompt = "trippy vibrant psychedelic, neon electric forest, HD 4K, bokeh, surreal and realism, "
+    prompt = "fantasy surreal landscape"
     negative_prompt = "blurry"
 
     model = ChromasthesiaDiffuser(model_id=model_id)

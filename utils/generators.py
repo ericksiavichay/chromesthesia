@@ -47,7 +47,9 @@ class ChromasthesiaDiffuser:
                 variant="fp16",
                 use_safetensors=True,
             )
-            # base.unet = torch.compile(base.unet, mode="reduce-overhead", fullgraph=True) # may increase inference speed, use with caution
+            base.unet = torch.compile(
+                base.unet, mode="reduce-overhead", fullgraph=True
+            )  # may increase inference speed, use with caution
 
             self.models.append(base)
             self.models.append(
@@ -77,7 +79,7 @@ class ChromasthesiaDiffuser:
                 self.models[0].to(device)
                 outputs = self.models[0](*args, **kwargs).images[0]
         elif self.model_id == "stabilityai/stable-diffusion-xl-base-1.0-with-refiner":
-            n_steps = 20
+            n_steps = 40
             high_noise_frac = 0.8
 
             if "image" in kwargs:
