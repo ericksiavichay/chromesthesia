@@ -17,3 +17,5 @@ if not os.path.exists("video_export"):
     os.makedirs("video_export")
 if not os.path.exists("video_export/images"):
     os.makedirs("video_export/images")
+if not os.path.exists("video_export/video"):
+    os.makedirs("video_export/video")

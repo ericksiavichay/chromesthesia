@@ -104,7 +104,7 @@ class ChromasthesiaDiffuser:
                 num_inference_steps=n_steps,
                 denoising_start=high_noise_frac,
                 image=base_image,
-                prompt=kwargs["prompt"],
+                prompt=args[0],
             ).images[0]
 
         return outputs
@@ -155,6 +155,6 @@ def generate_video(
         print("Frame saved to:", output_path + "images/" + f"image_{index}.png")
 
     # convert frames to video
-    # processing.create_mp4_from_pngs(
-    #     output_path + "images/", output_path + "video.mp4", fps=fps
-    # )
+    processing.create_mp4_from_pngs(
+        output_path + "images/", output_path + "video/" "video.mp4", fps=fps
+    )
