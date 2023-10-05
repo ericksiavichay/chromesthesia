@@ -33,7 +33,7 @@ class ChromasthesiaDiffuser:
             )
 
     def __call__(self, *args, **kwargs):
-        if kwargs["image"] is not None:
+        if "image" not in kwargs:
             self.main_model.to(device)
             outputs = self.main_model(*args, **kwargs).images[0]
 
