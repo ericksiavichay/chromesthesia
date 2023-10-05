@@ -31,6 +31,13 @@ class ChromasthesiaDiffuser:
             self.main_model = StableDiffusionImg2ImgPipeline(
                 **self.init_model.components
             )
+        elif model_id == "stabilityai/stable-diffusion-xl-refiner-1.0":
+            self.init_model = StableDiffusionXLPipeline.from_pretrained(
+                model_id, torch_dtype=torch.float16, safety_checker=None
+            )
+            self.main_model = StableDiffusionXLImg2ImgPipeline(
+                **self.init_model.components
+            )
 
     def __call__(self, *args, **kwargs):
         if "image" in kwargs:
