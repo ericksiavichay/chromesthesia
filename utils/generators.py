@@ -47,7 +47,7 @@ class ChromasthesiaDiffuser:
                 variant="fp16",
                 use_safetensors=True,
             )
-            base.unet = torch.compile(base.unet, mode="reduce-overhead", fullgraph=True)
+            # base.unet = torch.compile(base.unet, mode="reduce-overhead", fullgraph=True)
 
             self.models.append(base)
             self.models.append(
@@ -83,7 +83,7 @@ class ChromasthesiaDiffuser:
             if "image" in kwargs:
                 self.models[2].to(device)
                 base_image = self.models[2](
-                    n_steps=n_steps,
+                    num_inference_steps=n_steps,
                     denoising_end=high_noise_frac,
                     output_type="latent",
                     *args,
