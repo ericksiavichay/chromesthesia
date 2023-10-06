@@ -47,9 +47,9 @@ class ChromasthesiaDiffuser:
                 variant="fp16",
                 use_safetensors=True,
             )
-            base.unet = torch.compile(
-                base.unet, mode="reduce-overhead", fullgraph=True
-            )  # may increase inference speed, use with caution
+            # base.unet = torch.compile(
+            #     base.unet, mode="reduce-overhead", fullgraph=True
+            # )  # may increase inference speed, use with caution
 
             self.models.append(base)
             self.models.append(
@@ -117,6 +117,7 @@ def generate_video(
     model,
     prompt,
     negative_prompt=None,
+    init_image=None,
     output_path="~/video_export/",
     num_frames=300,
     fps=30,
@@ -130,16 +131,18 @@ def generate_video(
     model should be a function that takes in the prompts and scalers and returns a diffuser
     """
 
-    if not os.path.exists(os.path.dirname(output_path + "images/")):
-        os.makedirs(os.path.dirname(output_path + "images/"))
-
     # if there are images from a previous run, delete them
     if os.path.exists(output_path + "images/"):
         for filename in os.listdir(output_path + "images/"):
             if filename.endswith((".png", ".mp4")):
                 os.remove(output_path + "images/" + filename)
 
-    init_image = model(prompt, negative_prompt=negative_prompt)
+    # if there's a video from a previous run, delete it
+    if os.path.exists(output_path + "video/video.mp4"):
+        os.remove(output_path + "video/video.mp4")
+
+    if init_image is None:
+        init_image = model(prompt, negative_prompt=negative_prompt)
 
     # generate frames
     current_image = init_image

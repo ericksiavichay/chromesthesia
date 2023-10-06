@@ -4,6 +4,14 @@ Helpful functions for processing data.
 import os
 import re
 import imageio
+from PIL import Image
+
+
+def load_image(path, size=None):
+    img = Image.open(path).convert("RGB")
+    if size is not None:
+        img = img.resize((size[0], size[1]), Image.LANCZOS)
+    return img
 
 
 def extract_number(filename):
