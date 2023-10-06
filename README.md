@@ -2,7 +2,16 @@
 
 1st place hackthon project at the AGI house. Contributors: Erick Siavichay, Ethan Goldfarb, Yuxi Liu, and Shawn Dimantha
 
+## Installation
+```
+git clone https://github.com/ericksiavichay/chromesthesia.git
+cd chromesthesia
+python setup.py
+python main.py
+```
+
 ## Settings you can play with
+Located in main.py.
 
 ### model_id
 
