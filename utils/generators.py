@@ -24,7 +24,9 @@ else:
 
 
 class ChromasthesiaDiffuser:
-    def __init__(self, model_id="runwayml/stable-diffusion-v1-5") -> None:
+    def __init__(
+        self, model_id="runwayml/stable-diffusion-v1-5", safetensor_path=None
+    ) -> None:
         self.models = []
         self.model_id = model_id
         if model_id == "runwayml/stable-diffusion-v1-5":
@@ -61,6 +63,19 @@ class ChromasthesiaDiffuser:
                     use_safetensors=True,
                     variant="fp16",
                     safety_checker=None,
+                )
+            )
+            self.models.append(
+                StableDiffusionXLImg2ImgPipeline(**self.models[0].components)
+            )
+        elif model_id == "sdxl-1.0/safetensor":
+            assert safetensor_path is not None, "Must provide safetensor path"
+            self.models.append(
+                StableDiffusionXLPipeline.from_single_file(
+                    safetensor_path,
+                    torch_dtype=torch.float16,
+                    safety_checker=None,
+                    use_safetensors=True,
                 )
             )
             self.models.append(
@@ -108,6 +123,14 @@ class ChromasthesiaDiffuser:
                 image=base_image,
                 prompt=args[0],
             ).images[0]
+
+        elif self.model_id == "sdxl-1.0/safetensor":
+            if "image" in kwargs:
+                self.models[1].to(device)
+                outputs = self.models[1](*args, **kwargs).images[0]
+            else:
+                self.models[0].to(device)
+                outputs = self.models[0](*args, **kwargs).images[0]
 
         return outputs
 
