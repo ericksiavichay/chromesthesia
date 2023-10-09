@@ -6,6 +6,7 @@ Original hackers include Yuxi Liu, Ethan Goldfarb, Shawn Dimantha, and Erick Sia
 
 from utils.generators import generate_video, ChromasthesiaDiffuser
 from utils.processing import load_image
+from PIL import Image
 
 if __name__ == "__main__":
     # model_id = "runwayml/stable-diffusion-v1-5"

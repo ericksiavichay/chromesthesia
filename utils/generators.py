@@ -68,10 +68,10 @@ class ChromasthesiaDiffuser:
             self.models.append(
                 StableDiffusionXLImg2ImgPipeline(**self.models[0].components)
             )
-        elif model_id == "sdxl-1.0/safetensor":
+        elif model_id == "sd-1.5/safetensor":
             assert safetensor_path is not None, "Must provide safetensor path"
             self.models.append(
-                StableDiffusionXLPipeline.from_single_file(
+                StableDiffusionPipeline.from_single_file(
                     safetensor_path,
                     torch_dtype=torch.float16,
                     safety_checker=None,
@@ -79,7 +79,7 @@ class ChromasthesiaDiffuser:
                 )
             )
             self.models.append(
-                StableDiffusionXLImg2ImgPipeline(**self.models[0].components)
+                StableDiffusionImg2ImgPipeline(**self.models[0].components)
             )
         else:
             raise NotImplementedError
@@ -124,7 +124,7 @@ class ChromasthesiaDiffuser:
                 prompt=args[0],
             ).images[0]
 
-        elif self.model_id == "sdxl-1.0/safetensor":
+        elif self.model_id == "sd-1.5/safetensor":
             if "image" in kwargs:
                 self.models[1].to(device)
                 outputs = self.models[1](*args, **kwargs).images[0]
