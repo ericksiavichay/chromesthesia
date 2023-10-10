@@ -24,9 +24,7 @@ else:
 
 
 class ChromasthesiaDiffuser:
-    def __init__(
-        self, model_id="runwayml/stable-diffusion-v1-5", safetensor_path=None
-    ) -> None:
+    def __init__(self, model_id="runwayml/stable-diffusion-v1-5", path=None) -> None:
         self.models = []
         self.model_id = model_id
         if model_id == "runwayml/stable-diffusion-v1-5":
@@ -69,10 +67,10 @@ class ChromasthesiaDiffuser:
                 StableDiffusionXLImg2ImgPipeline(**self.models[0].components)
             )
         elif model_id == "sd-1.5/safetensor":
-            assert safetensor_path is not None, "Must provide safetensor path"
+            assert path is not None, "Must provide safetensor path"
             self.models.append(
                 StableDiffusionPipeline.from_single_file(
-                    safetensor_path,
+                    path,
                     torch_dtype=torch.float16,
                     safety_checker=None,
                     use_safetensors=True,
@@ -81,6 +79,14 @@ class ChromasthesiaDiffuser:
             self.models.append(
                 StableDiffusionImg2ImgPipeline(**self.models[0].components)
             )
+        elif model_id == "huggingface/path":
+            assert path is not None, "Must provide huggingface path"
+            self.models.append(
+                DiffusionPipeline.from_pretrained(
+                    path, torch_dtype=torch.float16, safety_checker=None
+                )
+            )
+            self.models.append(DiffusionPipeline(**self.models[0].components))
         else:
             raise NotImplementedError
 
@@ -125,6 +131,14 @@ class ChromasthesiaDiffuser:
             ).images[0]
 
         elif self.model_id == "sd-1.5/safetensor":
+            if "image" in kwargs:
+                self.models[1].to(device)
+                outputs = self.models[1](*args, **kwargs).images[0]
+            else:
+                self.models[0].to(device)
+                outputs = self.models[0](*args, **kwargs).images[0]
+
+        elif self.model_id == "huggingface/path":
             if "image" in kwargs:
                 self.models[1].to(device)
                 outputs = self.models[1](*args, **kwargs).images[0]
